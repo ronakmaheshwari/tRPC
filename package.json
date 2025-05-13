@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -b",
-    "dev": "tsc -b && node ./dist/index.js",
+    "dev": "tsc -b && node ./dist/server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,9 +15,12 @@
   "dependencies": {
     "@trpc/client": "^11.1.2",
     "@trpc/server": "^11.1.2",
+    "@types/cors": "^2.8.18",
     "@types/express": "^5.0.1",
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mongoose": "^8.14.2",
     "morgan": "^1.10.0",
