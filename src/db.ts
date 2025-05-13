@@ -12,11 +12,22 @@ const connectDB = async () => {
 
 connectDB();
 
-const TodoSchema = new Schema({
-  title: String,
-  description: String,
+const UserSchema = new Schema({
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true }, 
 });
 
+const TodoSchema = new Schema({
+  title: { type: String, required: true },
+  description: { type: String },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+});
+
+const userModal = mongoose.model("User",UserSchema);
 const todoModal = mongoose.model("Todo", TodoSchema);
 
-export default todoModal;
+export {todoModal,userModal};

@@ -1,6 +1,6 @@
 import express from "express"
 import zod from "zod"
-import todoModal from "../db"
+import {todoModal} from "../db"
 
 const todoRouter = express.Router()
 
