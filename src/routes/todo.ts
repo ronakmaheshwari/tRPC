@@ -5,6 +5,7 @@ import {todoModal} from "../db"
 const todoRouter = express.Router()
 
 const TodoSchema = zod.object({
+    id:zod.string(),
     title:zod.string(),
     description:zod.string()
 })
@@ -49,8 +50,8 @@ todoRouter.post('/add',async(req:any,res:any)=>{
                 message:"Wrong Inputs Were Provided"
             })
         }
-        const {title,description} = req.body;
-        const response = await todoModal.create({title,description})
+        const {id,title,description} = req.body;
+        const response = await todoModal.create({userId:id,title,description})
         if(!response){
             return res.status(500).json({
                 message:"Internal Error Occured"
