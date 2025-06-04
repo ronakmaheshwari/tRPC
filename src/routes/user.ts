@@ -3,6 +3,7 @@ import zod from "zod"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import { userModal } from "../db"
+import { authMiddleware } from "../middleware"
 
 const saltround = 10
 const jwtSecret = "123456"
@@ -77,10 +78,15 @@ userRouter.post("/signin",async(req:any,res:any)=>{
     }
 })
 
-userRouter.get("/",async(req:any,res:any)=>{
-    const response = await userModal.find({}, { password: 0 });
+userRouter.get("/",authMiddleware,async(req:any,res:any)=>{
+    const response = await userModal.find();
     return res.status(200).json({
-        message:response
+        message:response.map((x)=>{
+            return{
+                username:x.username,
+                password:x.password
+            }
+        })
     })
 })
 

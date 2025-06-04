@@ -1,11 +1,11 @@
 import express from "express"
 import zod from "zod"
 import {todoModal} from "../db"
+import { authMiddleware } from "../middleware"
 
 const todoRouter = express.Router()
 
 const TodoSchema = zod.object({
-    id:zod.string(),
     title:zod.string(),
     description:zod.string()
 })
@@ -30,11 +30,15 @@ type TodoType = zod.infer<typeof TodoSchema>;
 type UpdateType = zod.infer<typeof UpdateSchema>;
 type PatchType= zod.infer<typeof PatchSchema>;
 
-todoRouter.get('/',async(req:any,res:any)=>{
+todoRouter.get('/',authMiddleware,async(req:any,res:any)=>{
     try{
-        const response = await todoModal.find();
+        const userId = req.userId;
+        const response = await todoModal.find({userId});
         return res.status(200).json({
-            todos:response
+            todos: response.map((x) =>({
+                title: x.title,
+                description: x.description
+            }))
         })
     }catch(error){
         console.error(error);
@@ -42,7 +46,7 @@ todoRouter.get('/',async(req:any,res:any)=>{
     }
 })
 
-todoRouter.post('/add',async(req:any,res:any)=>{
+todoRouter.post('/add',authMiddleware,async(req:any,res:any)=>{
    try{
     const {success} = TodoSchema.safeParse(req.body);
         if(!success){
@@ -50,7 +54,8 @@ todoRouter.post('/add',async(req:any,res:any)=>{
                 message:"Wrong Inputs Were Provided"
             })
         }
-        const {id,title,description} = req.body;
+        const id = req.userId;
+        const {title,description} = req.body;
         const response = await todoModal.create({userId:id,title,description})
         if(!response){
             return res.status(500).json({
@@ -68,7 +73,7 @@ todoRouter.post('/add',async(req:any,res:any)=>{
    }
 })
 
-todoRouter.put('/update',async(req:any,res:any)=>{
+todoRouter.put('/update',authMiddleware,async(req:any,res:any)=>{
     try{
     const {success} = UpdateSchema.safeParse(req.body);
         if(!success){
@@ -76,17 +81,19 @@ todoRouter.put('/update',async(req:any,res:any)=>{
                 message:"Wrong Inputs Were Provided"
             })
         }
-    const {id,title,description} = req.body;
-    const CheckId = await todoModal.findById(id)
-    if(!CheckId){
-        return res.status(404).json({
-            message:"Id doesnt Exist!"
+        const userId = req.userId;
+        console.log(userId)
+        const {id,title,description} = req.body;
+        const CheckId = await todoModal.findById(id)
+        if(!CheckId){
+            return res.status(404).json({
+                message:"Id doesnt Exist!"
+            })
+        }
+        const response = await todoModal.findByIdAndUpdate({id,title,description});
+        return res.status(200).json({
+            message:"The Todo Is updated"
         })
-    }
-    const response = await todoModal.findByIdAndUpdate({id,title,description});
-    return res.status(200).json({
-        message:"The Todo Is updated"
-    })
     }catch(error){
         console.log(error)
         return res.status(500).json({
@@ -95,7 +102,7 @@ todoRouter.put('/update',async(req:any,res:any)=>{
     }
 })
 
-todoRouter.patch('/update',async(req:any,res:any)=>{
+todoRouter.patch('/update',authMiddleware,async(req:any,res:any)=>{
     try{
         const {success} = PatchSchema.safeParse(req.body)
         if(!success){
@@ -119,7 +126,7 @@ todoRouter.patch('/update',async(req:any,res:any)=>{
     }
 })
 
-todoRouter.delete('/delete',async(req:any,res:any)=>{
+todoRouter.delete('/delete',authMiddleware,async(req:any,res:any)=>{
     try {
     const {success} = DeleteSchema.safeParse(req.body);
         if(!success){

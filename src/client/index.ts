@@ -4,33 +4,22 @@ import { AppRouter } from '../server';
 const trpc = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
-      url: 'http://localhost:3001',
+      url: 'http://localhost:3000',
     }),
   ],
 });
 
-async function main() {
-  // let deleted = await trpc.todo.DeleteTodo.mutate({id:"6823885155a99b25691084d3"})
-  // console.log(deleted)
+async function main(){
 
-  // let gettodo = await trpc.todo.GetTodo.query()
-  // console.log(gettodo)
+    
+    const resp = await trpc.todo.createTodo.mutate({
+        title:"Ronak At its peak",
+        description:"The GOAT Created",
+        userId:"6824e878dafca213b3139c7c"
+    })
 
-  let signin = await trpc.user.Signin.mutate({
-    username:"ronak",
-    password:"123456"
-  })
-  console.log(signin)
-
-  // let create = await trpc.todo.CreateTodo.mutate({
-  //   id:"68239b44068cae7e9403b0e7",
-  //   title:"Learning tRPC's",
-  //   description:"EndPoint Hits up Here"
-  // })
-  // console.log(create)
-  
-  // let getUsers = await trpc.user.GetUsers.query()
-  // console.log(getUsers)
+    const response = await trpc.todo.getTodo.query();
+    console.log(response);
 }
 
-main()
+main();

@@ -17,6 +17,7 @@
     "@trpc/server": "^11.1.2",
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.18",
+    "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/mongoose": "^5.11.97",

@@ -1,17 +1,18 @@
-import {router} from "./trpc"
+import todoRouter from "./todo";
+import { publicProcedure, router } from "./trpc";
 import { createHTTPServer } from '@trpc/server/adapters/standalone';
-import { todoRouter } from "./todo";
-import { userRouter } from "./user";
 
-const appRouter=router({
-    todo: todoRouter,
-    user: userRouter
-})
+const appRouter = router({
+  greeting: publicProcedure.query(() => 'hello tRPC v10!'),
+  todo:todoRouter
+});
+ 
+// Export only the type of a router!
+// This prevents us from importing server code on the client.
+export type AppRouter = typeof appRouter;
 
 const server = createHTTPServer({
   router: appRouter,
 });
  
-server.listen(3001);
-
-export type AppRouter = typeof appRouter;
+server.listen(3000);
