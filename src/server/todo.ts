@@ -18,15 +18,15 @@ const todoRouter = router({
       }
       return response;
     } catch (error) {
-      console.error(error);
-      return { error: "Failed to fetch todos" };
+      throw new Error('Unauthorized: Invalid or expired token');
     }
   }),
 
   createTodo: publicProcedure
     .input(TodoSchema)
-    .mutation(async ({ input }) => {
-        const { title, description, completed, userId } = input;
+    .mutation(async (opts) => {
+        const userId = opts.ctx.userId;
+        const { title, description, completed } = opts.input;
         const response = await todoModal.create({
           title,
           description,
@@ -35,6 +35,28 @@ const todoRouter = router({
         });
         return response;
     }),
+
+    dynamicRoute: publicProcedure
+    .input(z.object({ title: z.string() }))
+    .query(async (opts) => {
+      const { title } = opts.input;
+      const response = await todoModal.findOne({ title });
+      return response;
+    }),
+
+    userTodos: publicProcedure.query(async (opts) => {
+      const userId = opts.ctx.userId;
+
+      try {
+        const todos = await todoModal.find({ userId });
+        if (todos.length === 0) {
+          return "No todos present";
+        }
+        return todos;
+      } catch (error) {
+        throw new Error("Failed to fetch user todos");
+      }
+    })
 });
 
 export default todoRouter;

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc -b",
     "dev": "tsc -b && node ./dist/server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client":"tsc -b && node dist/client/index.js"
   },
   "keywords": [],
   "author": "",
