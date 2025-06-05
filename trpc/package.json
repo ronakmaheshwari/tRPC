@@ -1,0 +1,35 @@
+{
+  "name": "trpc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsc -b && node ./dist/server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client":"tsc -b && node dist/client/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.10.0",
+  "dependencies": {
+    "@trpc/client": "^11.1.2",
+    "@trpc/server": "^11.1.2",
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.18",
+    "@types/dotenv": "^8.2.3",
+    "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/mongoose": "^5.11.97",
+    "@types/morgan": "^1.9.9",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.14.2",
+    "morgan": "^1.10.0",
+    "zod": "^3.24.4"
+  }
+}

@@ -29,7 +29,7 @@ async function main(){
     // console.log(resp);
 
     // const resp = await trpc.user.userLogin.mutate({username:"jedi",password:"Hyperbeast@77"})
-    const resp = await trpc.todo.userTodos.query();
+    const resp = await trpc.userTodos.query();
     console.log(resp);
 }
 

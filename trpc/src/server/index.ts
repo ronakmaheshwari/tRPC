@@ -1,22 +1,24 @@
 import todoRouter from "./todo";
-import { publicProcedure, router } from "./trpc";
 import { createHTTPServer } from '@trpc/server/adapters/standalone';
 import userRouter, { jwtSecret } from "./users";
 import jwt from "jsonwebtoken"
+import { mergeRouters } from "@trpc/server/unstable-core-do-not-import";
 
-const appRouter = router({
-  greeting: publicProcedure.query(() => 'hello tRPC v10!'),
-  todo:todoRouter,
-  user:userRouter
-});
- 
+// const appRouter = router({
+//   // greeting: publicProcedure.query(() => 'hello tRPC v10!'),
+//   todo:todoRouter,
+//   user:userRouter
+// });
+
+const appRouter = mergeRouters(todoRouter,userRouter);
+
 // Export only the type of a router!
 // This prevents us from importing server code on the client.
 export type AppRouter = typeof appRouter;
 
 const server = createHTTPServer({
   router: appRouter,
-  createContext(opts){
+  createContext(opts: { req: { headers: Record<string, string | undefined> } }){
     const authHeader = opts.req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       throw new Error('Unauthorized: No or invalid authorization header');
@@ -33,4 +35,3 @@ const server = createHTTPServer({
   }
 });
  
-server.listen(3000);
