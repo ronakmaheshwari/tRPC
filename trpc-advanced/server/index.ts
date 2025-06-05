@@ -8,7 +8,7 @@ import { todoRouter } from './routers/todo';
 import cors from "cors";
 export const SECRET = 'SECr3t';
 
-mongoose.connect('mongodb+srv://ronak:difN0qPVinoTH791@cluster0.gq8an.mongodb.net/trpc');
+mongoose.connect('');
 
 // using trpc
 const appRouter = router({
